@@ -42,7 +42,7 @@ def updateValuesGrid(currentUGrid, currentVGrid, newUGrid, newVGrid):
             phi = 0.079 # near excitability
             f = 1.4
             q = 0.002
-            #dt = 0.001
+            dt = 0.001
             #dx = 0.25
             Du = 0.45 # diffusion coefficient
 
@@ -78,18 +78,12 @@ def updateValuesGrid(currentUGrid, currentVGrid, newUGrid, newVGrid):
             # local concentrations of activator
             laplasian = Du * ( (neighboursSum - neighbours * currentUGrid[x, y]) / 0.0625)
 
-            newUGrid[x, y] = (1/epsilon) * (u - np.square(u) - ((f*v + phi)*(u - q)/(u + q))) + laplasian
-            if newUGrid[x, y] < 0.00001:
-                newUGrid[x, y] = 0
-            elif newUGrid[x, y] > 0.99999:
-                newUGrid[x, y] = 1
+            newUGrid[x, y] = currentUGrid[x, y] + ( (1/epsilon) * (u - np.square(u) - ((f*v + phi)*(u - q)/(u + q))) + laplasian ) * dt
+
 
             # local concentrations of inhibitor
-            newVGrid[x, y] = u - v
-            if newVGrid[x, y] < 0.00001:
-                newVGrid[x, y] = 0
-            elif newVGrid[x, y] > 0.99999:
-                newVGrid[x, y] = 1
+            newVGrid[x, y] = currentVGrid[x, y] + ( u - v ) * dt
+
     
     np.copyto(currentUGrid, newUGrid)
     np.copyto(currentVGrid, newVGrid)
@@ -97,9 +91,9 @@ def updateValuesGrid(currentUGrid, currentVGrid, newUGrid, newVGrid):
 def updateGraphicsGrid(currentUGrid, currentVGrid, newUGrid, newVGrid):
     for x in range(heightInBlocks):
         for y in range(widthInBlocks):
-            uVal = round( 0xFF * clamp(0, 1, currentUGrid[x, y]) )
-            vVal = round( 0xFF * clamp(0, 1, currentVGrid[x, y]) )
-            pygame.draw.circle(SCREEN, (0, 0, uVal), (y*blockSize+(blockSize/2), x*blockSize+(blockSize/2)), blockSize/2)
+            uVal = round( 0xFF * clamp(0.0, 1.0, currentUGrid[x, y]) )
+            vVal = round( 0xFF * clamp(0.0, 1.0, currentVGrid[x, y]) )
+            pygame.draw.circle(SCREEN, (uVal, vVal, 0), (y*blockSize+(blockSize/2), x*blockSize+(blockSize/2)), blockSize/2)
 
 pygame.init()
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -120,5 +114,3 @@ while True:
     pygame.display.flip()
     CLOCK.tick(1)
 
-    #intervalSec = 0.5 #in seconds
-    #time.sleep(intervalSec - time.time() % intervalSec)
