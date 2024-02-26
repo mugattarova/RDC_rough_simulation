@@ -1,0 +1,35 @@
+- when the simulation is supposed to fade to background, it doesn't 
+- strange green pattern instead
+- background changes colour
+
+1. tried to provide no stimulus
+    background still changes colour? some change by default? cringe
+    u value appears to deteriorate over time
+    so the calculation needs to be deterministic
+
+    1.1 round to 6 sig figs
+        after at most 25 iterations it platoes (more or less)
+            0.002167
+        after at most 100 iterations changes
+            0.002166
+        after at most 200 iterations
+            0.002165
+        the pattern continues, although it takes more iterations for the number to change
+
+- i need to provide limits (with an input image?)
+
+- i think i know where the issue lies. I provide the same illumination everywhere, when i maybe shouldn't?
+- i broke it - it doesn't spread after the first propagation :(
+- picture input works though
+
+- spreads instatly?? 255 off the bat
+- 130 off the bat. internal elements seems to be intact?? must be the visualiser?
+- picture was being multiplied by 255 twice. stupid
+
+- now the reaction cuts off too fast, this is especially evident with random noise - it cancels out into blackness, instead of reaching equilibrium
+
+- waves need to travel farther (or actually make vesicles smaller)
+- decreased phi, waves travel for longer. increasing screen size again to 100x150
+
+----------- LOOKUP TABLE -------------
+
