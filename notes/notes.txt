@@ -19,7 +19,7 @@
 - i need to provide limits (with an input image?)
 
 - i think i know where the issue lies. I provide the same illumination everywhere, when i maybe shouldn't?
-- i broke it - it doesn't spread after the first propagation :(
+- i broke it - it doesn't spread after the first propagation 😔
 - picture input works though
 
 - spreads instatly?? 255 off the bat
@@ -33,3 +33,19 @@
 
 ----------- LOOKUP TABLE -------------
 
+To organise the information that each Vesicle possesses, I have created a Vesicle object that has correlating methods to update its state.
+Neither list nor a numpy array support object storage (well, they do, but all dot operators are treated as attributes, even when they're functions :() ), and instead prefer tuples of data, but that is not usable for me (to unravel all dependencies is too much work). 
+So, I have opted out for a dictionary of (x, y): Vesicle obj. Hopefully it works.
+At the end, if it doesn't, i'm gonna flatten it into (state="", grid="", etc.) tuple. Silly shit from python, I guess it's not an OOP language.
+I'm sorry for blasphemy, I didn't...
+Anyway, it works with numpy. I opted for a simple double for loop, and it works, I had to declare to numpy that I'm using objects - and it works 👍
+
+Works, fully. With universal gap size, and custom inputs. yay🎉🎉🎉
+
+Now, to customize specific gaps. Unfortunately, the same principle of responsibility for walls should apply here, but I have not forseen this. 😔
+I might need to remake my calculation process
+
+Well, I have found a bug? arr[0-1][0] is a valid cell! Now, ideally, this would stumble into the index of -1, but that doesn't work!
+It's a valid expression. Very incovenient, have to check bounds myself.
+
+Custom gaps work, same responcibility principle as in full sim. east/south belong to self.
